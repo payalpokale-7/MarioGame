@@ -1,0 +1,78 @@
+import java.util.Scanner;
+
+public class MarioGame {
+
+    private static final int GROUND_LEVEL = 10;
+    private static final int MARIO_START_POSITION = 2;
+    private static final char EMPTY = ' ';
+    private static final char MARIO = 'M';
+    private static final char OBSTACLE = 'X';
+
+    private char[] ground;
+
+    private int marioPosition;
+
+    public MarioGame() {
+        this.ground = new char[GROUND_LEVEL];
+        this.marioPosition = MARIO_START_POSITION;
+        initializeGround();
+    }
+
+    private void initializeGround() {
+        for (int i = 0; i < GROUND_LEVEL; i++) {
+            ground[i] = EMPTY;
+        }
+        ground[MARIO_START_POSITION] = MARIO;
+    }
+
+    private void printGround() {
+        for (int i = 0; i < GROUND_LEVEL; i++) {
+            System.out.print(ground[i]);
+        }
+        System.out.println();
+    }
+
+    private void moveMario(int steps) {
+        if (marioPosition + steps < GROUND_LEVEL) {
+            ground[marioPosition] = EMPTY;
+            marioPosition += steps;
+            ground[marioPosition] = MARIO;
+        } else {
+            System.out.println("Mario can't go further!");
+        }
+    }
+
+    private void placeObstacle() {
+        int obstaclePosition = (int) (Math.random() * GROUND_LEVEL);
+        ground[obstaclePosition] = OBSTACLE;
+    }
+
+    public static void main(String[] args) {
+        MarioGame marioGame = new MarioGame();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to Console Mario!");
+        marioGame.printGround();
+
+        while (true) {
+            System.out.print("Enter move (e.g., '2' to move 2 steps, 'exit' to exit): ");
+            String input = scanner.nextLine();
+
+            if (input.equalsIgnoreCase("exit")) {
+                System.out.println("Game over. Exiting...");
+                break;
+            }
+
+            try {
+                int steps = Integer.parseInt(input);
+                marioGame.moveMario(steps);
+                marioGame.placeObstacle();
+                marioGame.printGround();
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number or 'exit'.");
+            }
+        }
+
+        scanner.close();
+    }
+}
